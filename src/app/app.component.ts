@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, isDevMode, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {DatabaseService} from '../core/services/database/database.service';
 import {ReactiveIDb} from '../core/services/database/reactive-i-db';
 import {ReactiveIDBDatabase} from '@creasource/reactive-idb';
 import {take} from 'rxjs';
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit {
   constructor(
     private dbService: DatabaseService,
     private reactiveIDb: ReactiveIDb,
-    ) {
+  ) {
   }
 
   ngOnInit(): void {
@@ -31,7 +32,7 @@ export class AppComponent implements OnInit {
     this.reactiveIDb.createDB().subscribe((db: ReactiveIDBDatabase) => console.log(db));
 
 
-    if (isDevMode()) {
+    if (!environment.production) {
       /**
        * Drop DB if you need
        */
@@ -46,8 +47,8 @@ export class AppComponent implements OnInit {
      * Put some data
      */
     setTimeout(() => {
-      this.reactiveIDb.put<{name: string}>('key2', {name: 'Denis'}, 2).subscribe();
-    }, 2000)
+      this.reactiveIDb.put<{ name: string }>('key2', {name: 'Denis2'}, 2).subscribe();
+    }, 2000);
 
     /**
      * Get some data
@@ -55,7 +56,7 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       this.reactiveIDb.get('key2')
         .subscribe((value) => console.log('Value from DB: ', value));
-    }, 3000)
+    }, 3000);
   }
 
   private customDBExample(): void {
